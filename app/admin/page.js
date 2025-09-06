@@ -31,7 +31,7 @@ export default function LoginPage() {
       }
 
       // Store token & user
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("adminToken", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
       router.push("/admin/dashboard");

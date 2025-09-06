@@ -23,7 +23,7 @@ export default function AdminDashboard() {
 
   if (isLoading) {
     return <AdminLayout>
-    <ClientLoader/>
+      <ClientLoader />
     </AdminLayout>
   }
 
