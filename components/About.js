@@ -90,7 +90,7 @@ export default function About() {
         {/* Content Grid */}
         <div className="flex flex-col-reverse md:flex-row gap-12 justify-between items-center mb-20">
           {/* Left Content */}
-          <div>
+          <div className='flex-1'>
             <h3 className="text-2xl font-bold text-white mb-6">{about?.title}</h3>
             {/* <p className="text-gray-400 mb-6 leading-relaxed">{profile.bio}</p> */}
             <p className="text-gray-400 mb-8 leading-relaxed">
@@ -160,3 +160,4 @@ export default function About() {
     </section>
   )
 }
+
