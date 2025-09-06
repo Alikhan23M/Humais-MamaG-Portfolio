@@ -16,23 +16,26 @@ export default function DashboardStats() {
 
   const fetchStats = async () => {
     try {
-      const [servicesRes, projectsRes, testimonialsRes] = await Promise.all([
+      const [servicesRes, projectsRes, testimonialsRes, messagesRes] = await Promise.all([
         fetch('/api/services'),
         fetch('/api/projects'),
-        fetch('/api/testimonials')
+        fetch('/api/testimonials'),
+        fetch('/api/messages') // Placeholder if you have a messages endpoint
       ])
 
-      const [services, projects, testimonials] = await Promise.all([
+      const [services, projects, testimonials, messages] = await Promise.all([
         servicesRes.json(),
         projectsRes.json(),
-        testimonialsRes.json()
+        testimonialsRes.json(),
+        // only those messages which are isRead false
+        messagesRes.json().then(data => data.filter(msg => !msg.isRead))
       ])
 
       setStats({
         services: services.length,
         projects: projects.length,
         testimonials: testimonials.length,
-        messages: 12 // Placeholder since we don't have a messages endpoint yet
+        messages: messages.length  // Placeholder if you have a messages endpoint
       })
     } catch (error) {
       console.error('Error fetching stats:', error)
