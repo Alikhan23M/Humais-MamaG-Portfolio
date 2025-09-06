@@ -36,7 +36,7 @@ export default function Services() {
     return {
       link: '#', // optional: can be replaced with actual service page link
       title: (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 border border-white/10 p-3 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500/20 shadow-lg">
           <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg">
             <IconComponent size={20} />
           </div>
@@ -63,7 +63,7 @@ export default function Services() {
 
   return (
     <section id="services" className="py-20 lg:py-32 bg-gradient-to-b from-gray-950 to-black">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text">

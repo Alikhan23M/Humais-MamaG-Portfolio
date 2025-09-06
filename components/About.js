@@ -128,33 +128,34 @@ export default function About() {
           </div>
         </div>
 
-        {/* Stats Section */}
-        <div ref={ref} className="grid grid-cols-2 md:grid-cols-4 gap-8 justify-center items-center">
-          {stats.map((stat) => {
-            const IconComponent = iconMap[stat.icon] || FiIcons.FiBarChart
-            const number = parseInt(stat.value.replace(/\D/g, '')) || 0
-            const suffix = stat.value.replace(/\d/g, '')
-            return (
-              <motion.div
-                key={stat._id}
-                whileHover={{ scale: 1.05 }}
-                className="text-center p-6 rounded-xl bg-gradient-to-br from-gray-900 to-gray-800 border border-white/10 shadow-lg hover:shadow-purple-500/20 transition-all"
-              >
-                <div className="inline-flex items-center justify-center w-14 h-14 mb-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-                  <IconComponent size={22} />
-                </div>
-                <div className="text-3xl font-bold text-white mb-2">
-                  {inView ? (
-                    <CountUp end={number} duration={2.5} suffix={suffix} />
-                  ) : (
-                    0 + suffix
-                  )}+
-                </div>
-                <div className="text-gray-400">{stat.text}</div>
-              </motion.div>
-            )
-          })}
+       {/* Stats Section */}
+<div ref={ref} className="grid grid-cols-2 md:grid-cols-4 gap-8 items-stretch">
+  {stats.map((stat) => {
+    const IconComponent = iconMap[stat.icon] || FiIcons.FiBarChart
+    const number = parseInt(stat.value.replace(/\D/g, '')) || 0
+    const suffix = stat.value.replace(/\d/g, '')
+    return (
+      <motion.div
+        key={stat._id}
+        whileHover={{ scale: 1.05 }}
+        className="h-full flex flex-col justify-between text-center p-6 rounded-xl bg-gradient-to-br from-gray-900 to-gray-800 border border-white/10 shadow-lg hover:shadow-purple-500/20 transition-all"
+      >
+        <div className="inline-flex items-center justify-center self-center w-14 h-14 mb-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+          <IconComponent size={22} />
         </div>
+        <div className="text-3xl font-bold text-white mb-2">
+          {inView ? (
+            <CountUp end={number} duration={2.5} suffix={suffix} />
+          ) : (
+            0 + suffix
+          )}+ 
+        </div>
+        <div className="text-gray-400">{stat.text}</div>
+      </motion.div>
+    )
+  })}
+</div>
+
       </div>
     </section>
   )

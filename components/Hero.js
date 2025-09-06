@@ -48,8 +48,8 @@ export default function Hero() {
             transition={{ duration: 0.8 }}
             className="flex-1 lg:pr-12 text-center lg:text-left"
           >
-            <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm text-purple-400 font-medium mb-6">
-              <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-ping"></span>
+            <div className="mt-4 md:mt-0 inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm text-purple-400 font-medium mb-6">
+              <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-ping "></span>
               Available for new projects
             </div>
 

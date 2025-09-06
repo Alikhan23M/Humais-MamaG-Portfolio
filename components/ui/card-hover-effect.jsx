@@ -16,7 +16,7 @@ export const HoverEffect = ({
         <a
           href={item?.link}
           key={item?.link}
-          className="relative group  block p-2 h-full w-full"
+          className="relative group  block p-2 h-full w-full border border-gray-700/50 rounded-3xl"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}>
           <AnimatePresence>
