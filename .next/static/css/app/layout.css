@@ -834,6 +834,9 @@ select {
 .top-20 {
   top: 5rem;
 }
+.z-0 {
+  z-index: 0;
+}
 .z-10 {
   z-index: 10;
 }
@@ -1181,6 +1184,9 @@ select {
 .items-start {
   align-items: flex-start;
 }
+.items-end {
+  align-items: flex-end;
+}
 .items-center {
   align-items: center;
 }
@@ -1313,6 +1319,9 @@ select {
   --tw-border-opacity: 1;
   border-color: rgb(55 65 81 / var(--tw-border-opacity, 1));
 }
+.border-gray-700\/50 {
+  border-color: rgb(55 65 81 / 0.5);
+}
 .border-primary-600 {
   --tw-border-opacity: 1;
   border-color: rgb(37 99 235 / var(--tw-border-opacity, 1));
@@ -1332,13 +1341,6 @@ select {
 }
 .border-white\/20 {
   border-color: rgb(255 255 255 / 0.2);
-}
-.border-gray-800 {
-  --tw-border-opacity: 1;
-  border-color: rgb(31 41 55 / var(--tw-border-opacity, 1));
-}
-.border-gray-700\/50 {
-  border-color: rgb(55 65 81 / 0.5);
 }
 .bg-black {
   --tw-bg-opacity: 1;
@@ -1572,6 +1574,9 @@ select {
 .to-pink-500 {
   --tw-gradient-to: #ec4899 var(--tw-gradient-to-position);
 }
+.to-pink-500\/20 {
+  --tw-gradient-to: rgb(236 72 153 / 0.2) var(--tw-gradient-to-position);
+}
 .to-pink-600 {
   --tw-gradient-to: #db2777 var(--tw-gradient-to-position);
 }
@@ -1586,9 +1591,6 @@ select {
 }
 .to-transparent {
   --tw-gradient-to: transparent var(--tw-gradient-to-position);
-}
-.to-pink-500\/20 {
-  --tw-gradient-to: rgb(236 72 153 / 0.2) var(--tw-gradient-to-position);
 }
 .bg-clip-text {
   -webkit-background-clip: text;
@@ -2577,6 +2579,10 @@ select {
 
 @media (min-width: 768px) {
 
+  .md\:visible {
+    visibility: visible;
+  }
+
   .md\:fixed {
     position: fixed;
   }
@@ -2592,6 +2598,10 @@ select {
 
   .md\:mt-0 {
     margin-top: 0px;
+  }
+
+  .md\:block {
+    display: block;
   }
 
   .md\:flex {
@@ -2654,6 +2664,15 @@ select {
     justify-content: space-between;
   }
 
+  .md\:gap-20 {
+    gap: 5rem;
+  }
+
+  .md\:px-12 {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+
   .md\:px-8 {
     padding-left: 2rem;
     padding-right: 2rem;
@@ -2665,6 +2684,10 @@ select {
 
   .md\:pt-10 {
     padding-top: 2.5rem;
+  }
+
+  .md\:text-justify {
+    text-align: justify;
   }
 
   .md\:text-5xl {
@@ -2711,6 +2734,11 @@ select {
     justify-content: flex-start;
   }
 
+  .lg\:px-16 {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+
   .lg\:px-8 {
     padding-left: 2rem;
     padding-right: 2rem;
@@ -2754,3 +2782,5 @@ select {
 .\[\&\>\*\]\:\[transform-style\:preserve-3d\]>* {
   transform-style: preserve-3d;
 }
+
+

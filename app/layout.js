@@ -1,5 +1,7 @@
+import Navbar from '@/components/Navbar'
 import './globals.css'
 import ClientLoader from '@/components/ui/ClientLoader'
+import Footer from '@/components/Footer'
 
 export const metadata = {
   title: 'Content Writer Portfolio',
@@ -9,7 +11,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body><ClientLoader>{children}</ClientLoader></body>
+      
+      <body>
+        <Navbar/>
+        <ClientLoader>{children}</ClientLoader>
+        <Footer/>
+        </body>
     </html>
   )
 }
