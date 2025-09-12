@@ -70,7 +70,7 @@ export default function About() {
   if (!profile) return null
 
   return (
-    <section id="about" className="py-24 bg-gray-950 relative overflow-hidden">
+    <section id="about" className="py-4 md:py-8 bg-gray-950 relative overflow-hidden">
       {/* Background Glow */}
       <div className="absolute inset-0">
         <div className="absolute top-20 -left-20 w-72 h-72 bg-purple-500 rounded-full opacity-20 blur-3xl"></div>
@@ -90,9 +90,10 @@ export default function About() {
 
         {/* Content Grid */}
         <div className="flex flex-col-reverse md:flex-row gap-12 justify-between items-center mb-20">
+
           {/* Left Content */}
           <div className='flex-1'>
-            <h3 className="text-2xl font-bold text-white mb-6">{about?.title}</h3>
+            <h3 className="hidden md:block text-2xl font-bold text-white mb-6">{about?.title}</h3>
             {/* <p className="text-gray-400 mb-6 leading-relaxed">{profile.bio}</p> */}
             <p className="text-gray-400 mb-8 leading-relaxed">
               {about?.description}
@@ -133,6 +134,7 @@ export default function About() {
               />
             </div>
           </div>
+          <h3 className=" md:hidden text-2xl font-bold text-white">{about?.title}</h3>
         </div>
 
         {/* Stats Section */}

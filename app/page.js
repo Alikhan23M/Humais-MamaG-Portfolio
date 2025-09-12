@@ -9,6 +9,7 @@ import Testimonials from '../components/Testimonials';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
 import Portfolio from '@/components/Portfolio';
+import Strategy from '@/components/Strategy';
 
 export default function Home() {
   // Use useRouter in Pages Router or usePathname in App Router
@@ -36,11 +37,13 @@ export default function Home() {
     <main className="min-h-screen">
       <Hero id="home" />
       <About id="about" />
+      <Strategy id="strategy" />
       <Services id="services" />
       <Portfolio id="portfolio" />
       <Testimonials id="testimonials" />
       <Contact id="contact" />
       <Footer />
+
     </main>
   );
 }
