@@ -27,6 +27,7 @@ export default function AdminLayout({ children }) {
     { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
     { name: 'Profile', href: '/admin/profile', icon: User },
     {name:'About', href:'/admin/about', icon:InfoIcon},
+    {name: 'About Page', href:'/admin/detail-about', icon: User2},
     {name:'Stats', href:'/admin/stats', icon: BarChart2},
     { name: 'Services', href: '/admin/services', icon: Briefcase },
     { name: 'Projects', href: '/admin/projects', icon: FolderOpen },

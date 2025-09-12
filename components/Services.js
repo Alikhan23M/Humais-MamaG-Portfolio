@@ -62,7 +62,7 @@ export default function Services() {
   })
 
   return (
-    <section id="services" className="py-20 lg:py-32 bg-gradient-to-b from-gray-950 to-black">
+    <section id="services" className="bg-gradient-to-b from-gray-950 to-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">

@@ -7,6 +7,7 @@ import * as FiIcons from 'react-icons/fi'
 import * as AiIcons from 'react-icons/ai'
 import * as BsIcons from 'react-icons/bs'
 import CountUp from 'react-countup'
+import Link from 'next/link'
 
 // Merge all icons
 const iconMap = { ...FiIcons, ...AiIcons, ...BsIcons }
@@ -78,14 +79,14 @@ export default function About() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
-        <div className="text-center mb-16">
+        {/* <div className="text-center mb-16">
           <h2 className="text-4xl sm:text-5xl font-extrabold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
             About Me
           </h2>
           <p className="text-lg text-gray-400 max-w-3xl mx-auto">
             Passionate about creating impactful digital experiences that blend clean design with powerful functionality.
           </p>
-        </div>
+        </div> */}
 
         {/* Content Grid */}
         <div className="flex flex-col-reverse md:flex-row gap-12 justify-between items-center mb-20">
@@ -96,7 +97,12 @@ export default function About() {
             <p className="text-gray-400 mb-8 leading-relaxed">
               {about?.description}
             </p>
-
+            <div className=' mt-12'>
+              <Link href="/about" className="text-purple-400 px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-purple-500/20 transition-all border border-purple-400">
+                Know More About Me
+              </Link>
+            </div>
+            {/*   
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <span className="font-semibold text-white">Name:</span>
@@ -112,7 +118,8 @@ export default function About() {
                   <span className="text-gray-400">{profile.location}</span>
                 </div>
               )}
-            </div>
+            </div> */}
+
           </div>
 
           {/* Right Image */}
@@ -128,36 +135,38 @@ export default function About() {
           </div>
         </div>
 
-       {/* Stats Section */}
-<div ref={ref} className="grid grid-cols-2 md:grid-cols-4 gap-8 items-stretch">
-  {stats.map((stat) => {
-    const IconComponent = iconMap[stat.icon] || FiIcons.FiBarChart
-    const number = parseInt(stat.value.replace(/\D/g, '')) || 0
-    const suffix = stat.value.replace(/\d/g, '')
-    return (
-      <motion.div
-        key={stat._id}
-        whileHover={{ scale: 1.05 }}
-        className="h-full flex flex-col justify-between text-center p-6 rounded-xl bg-gradient-to-br from-gray-900 to-gray-800 border border-white/10 shadow-lg hover:shadow-purple-500/20 transition-all"
-      >
-        <div className="inline-flex items-center justify-center self-center w-14 h-14 mb-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-          <IconComponent size={22} />
+        {/* Stats Section */}
+        <div ref={ref} className="grid grid-cols-2 md:grid-cols-4 gap-8 items-stretch">
+          {stats.map((stat) => {
+            const IconComponent = iconMap[stat.icon] || FiIcons.FiBarChart
+            const number = parseInt(stat.value.replace(/\D/g, '')) || 0
+            const suffix = stat.value.replace(/\d/g, '')
+            return (
+              <motion.div
+                key={stat._id}
+                whileHover={{ scale: 1.05 }}
+                className="h-full flex flex-col justify-between text-center p-6 rounded-xl bg-gradient-to-br from-gray-900 to-gray-800 border border-white/10 shadow-lg hover:shadow-purple-500/20 transition-all"
+              >
+                <div className="inline-flex items-center justify-center self-center w-14 h-14 mb-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                  <IconComponent size={22} />
+                </div>
+                <div className="text-3xl font-bold text-white mb-2">
+                  {inView ? (
+                    <CountUp end={number} duration={2.5} suffix={suffix} />
+                  ) : (
+                    0 + suffix
+                  )}+
+                </div>
+                <div className="text-gray-400">{stat.text}</div>
+              </motion.div>
+            )
+          })}
         </div>
-        <div className="text-3xl font-bold text-white mb-2">
-          {inView ? (
-            <CountUp end={number} duration={2.5} suffix={suffix} />
-          ) : (
-            0 + suffix
-          )}+ 
-        </div>
-        <div className="text-gray-400">{stat.text}</div>
-      </motion.div>
-    )
-  })}
-</div>
 
       </div>
     </section>
   )
 }
+
+
 

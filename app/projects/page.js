@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { ExternalLink, Eye, Filter } from 'lucide-react'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
 
 export default function Portfolio() {
     const [projects, setProjects] = useState([])
@@ -20,8 +22,9 @@ export default function Portfolio() {
             const response = await fetch('/api/projects')
             if (response.ok) {
                 const data = await response.json()
-                setProjects(data)
-                const uniqueCategories = ['All', ...new Set(data.map(p => p.category))]
+                const activeProjects = data.filter(p => p.isActive);
+                setProjects(activeProjects.sort((a, b) => a.order - b.order || new Date(b.createdAt) - new Date(a.createdAt)))
+                const uniqueCategories = ['All', ...new Set(activeProjects.map(p => p.category))]
                 setCategories(uniqueCategories)
             }
         } catch (error) {
@@ -33,12 +36,16 @@ export default function Portfolio() {
         filter === 'All' ? projects : projects.filter(p => p.category === filter)
 
     return (
+        <>
+        <Navbar/>
         <section id="portfolio" className="py-24 bg-black ">
+
             {/* Background Glow */}
             {/* <div className="absolute inset-0 z-0">
                 <div className="absolute top-20 -left-20 w-72 h-72 bg-purple-500 rounded-full opacity-20 blur-3xl"></div>
                 <div className="absolute bottom-20 -right-20 w-72 h-72 bg-pink-500 rounded-full opacity-20 blur-3xl"></div>
             </div> */}
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-20">
                   {/* Background Glow */}
                 {/* <div className="hidden md:block absolute inset-0">
@@ -61,14 +68,14 @@ export default function Portfolio() {
                             setShowFilters(!showFilters)
                         }}
                         />
-                        <div className={`${showFilters?'':'hidden'} md:visible flex flex-wrap justify-center gap-4`}>
+                        <div className={`${showFilters?'':'visibility:hidden'} md:visibility:visible mx-auto flex flex-wrap justify-center items-center gap-4`}>
                         {categories.map(category => (
                             <button
                                 key={category}
                                 onClick={() => setFilter(category)}
                                 className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${filter === category
                                         ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg scale-105'
-                                        : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
+                                        : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white '
                                     }`}
                             >
                                 {category}
@@ -150,5 +157,7 @@ export default function Portfolio() {
                 )}
             </div>
         </section>
+        <Footer/>
+                </>
     )
 }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { ExternalLink, Eye } from 'lucide-react'
+import Link from 'next/link'
 
 export default function Portfolio() {
   const [projects, setProjects] = useState([])
@@ -17,8 +18,9 @@ export default function Portfolio() {
       const response = await fetch('/api/projects')
       if (response.ok) {
         const data = await response.json()
-        setProjects(data)
-        const uniqueCategories = ['All', ...new Set(data.map(p => p.category))]
+        const Featured = data.filter(p => p.isFeatured && p.isActive);
+        setProjects(Featured)
+        const uniqueCategories = ['All', ...new Set(Featured.map(p => p.category))]
         setCategories(uniqueCategories)
       }
     } catch (error) {
@@ -34,14 +36,16 @@ export default function Portfolio() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-extrabold text-white mb-4">My Portfolio</h2>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
+          <h2 className="text-4xl font-extrabold text-white mb-4">Featured Projects</h2>
+
+          {/* <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
             Explore my latest development projects with modern UI, animations, and interactive design.
-          </p>
+          </p> */}
 
           {/* Filter Buttons */}
-          <div className="flex flex-wrap justify-center gap-4">
-            {categories.map(category => (
+
+          {/* <div className="flex flex-wrap justify-center gap-4">
+            {categories.map(category =>  (
               <button
                 key={category}
                 onClick={() => setFilter(category)}
@@ -54,7 +58,7 @@ export default function Portfolio() {
                 {category}
               </button>
             ))}
-          </div>
+          </div> */}
         </div>
 
         {/* Projects Grid */}
@@ -120,6 +124,12 @@ export default function Portfolio() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className='self-center text-center mt-12'>
+          <Link href="/projects" className="text-purple-400 px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-purple-500/20 transition-all border border-purple-400">
+            View All Projects
+          </Link>
         </div>
 
         {filteredProjects.length === 0 && (

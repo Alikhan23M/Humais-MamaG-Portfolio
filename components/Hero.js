@@ -30,8 +30,8 @@ export default function Hero() {
       id="home"
       className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-950 relative overflow-hidden text-gray-200"
     >
-      <Navbar />
 
+      <Navbar />
       {/* Background glowing blobs */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-600/30 rounded-full blur-3xl animate-pulse"></div>

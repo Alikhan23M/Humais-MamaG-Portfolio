@@ -39,7 +39,7 @@ export default function AboutPage() {
     setSaving(true)
     try {
       const res = await fetch(`/api/about/`, {
-        method: about?._id ? "PUT" : "PUT",
+        method: about?._id ? "POST" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(about),
       })

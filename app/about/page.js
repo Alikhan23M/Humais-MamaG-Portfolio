@@ -1,37 +1,114 @@
-import Image from 'next/image'
-import React from 'react'
+"use client";
 
-export default function page() {
+import { useState, useEffect } from 'react';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import Image from 'next/image';
+import ClientLoader from '@/components/ui/ClientLoader'; // Assuming you have a loader component
+
+export default function AboutPage() {
+  const [aboutData, setAboutData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAboutData = async () => {
+      try {
+        const response = await fetch('/api/detail-about');
+        if (!response.ok) {
+          throw new Error('Failed to fetch about data');
+        }
+        const data = await response.json();
+        // console.log(data);
+        setAboutData(data[0]);
+      } catch (error) {
+        console.error("Error fetching about data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAboutData();
+  }, []);
+
+  if (isLoading) {
     return (
-        <>
-            <section className='py-24 bg-gray-950 relative overflow-hidden px-6 md:px-12 lg:px-16 min-h-screen flex flex-col '>
+      <div className="min-h-screen flex items-center justify-center bg-gray-950 text-white">
+        <ClientLoader />
+      </div>
+    );
+  }
 
-                {/* Background Glow */}
-                <div className="absolute inset-0">
-                    <div className="absolute top-20 -left-20 w-72 h-72 bg-purple-500 rounded-full opacity-20 blur-3xl"></div>
-                    <div className="absolute bottom-20 -right-20 w-72 h-72 bg-pink-500 rounded-full opacity-20 blur-3xl"></div>
-                </div>
+  if (!aboutData) {
+    return (
+      <>
+        <Navbar />
+        <main className="min-h-screen flex items-center justify-center bg-gray-950 text-white">
+          <p>Failed to load about page content.</p>
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
+  return (
+    <>
+      <Navbar />
+      <main className="min-h-screen bg-gray-950 text-gray-300 relative overflow-hidden px-6 md:px-12 lg:px-16">
+        {/* Background Glows */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute top-20 -left-20 w-72 h-72 bg-purple-500 rounded-full opacity-20 blur-3xl"></div>
+          <div className="absolute bottom-20 -right-20 w-72 h-72 bg-pink-500 rounded-full opacity-20 blur-3xl"></div>
+        </div>
 
-                <div className='flex flex-col-reverse md:flex-row justify-center items-center gap-10 md:gap-20'>
-                    <div>
-                        <h1 className='hidden md:block text-4xl sm:text-5xl font-extrabold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent'>About Me</h1>
+        {/* Main About Section */}
+        <section className="py-24 relative z-10">
+          <div className="container mx-auto">
+           {aboutData?.title !== '' && <h1 className="text-4xl sm:text-5xl font-extrabold mb-8 text-center bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent py-2">
+              {aboutData?.title}
+            </h1>}
+            {aboutData?.description!== '' &&<p className="text-lg text-center max-w-4xl mx-auto">
+              {aboutData?.description}
+            </p> }
+          </div>
+        </section>
 
-                        <p className='text-gray-300 text-lg max-w-3xl mb-8 md:text-justify'>I am a passionate content writer and digital strategist with over 5 years of experience in crafting compelling narratives that drive engagement and conversions. My expertise spans various industries, including technology, healthcare, finance, and lifestyle. I specialize in creating SEO-optimized content that not only resonates with the target audience but also ranks well on search engines. Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum iste facere culpa aspernatur suscipit fugit doloremque, dolore eius unde quidem repellat aperiam amet quia neque illum. Culpa ab doloremque vero, sapiente facilis tempora soluta impedit ullam est qui odio explicabo optio veniam laudantium nam quos odit ea, a dolore consectetur? Aut possimus cum porro deserunt officiis inventore nisi dolore natus provident error quas rem asperiores iusto, molestias facilis eum qui aliquid repellat neque. Officiis est excepturi pariatur, placeat nam maiores molestias laborum numquam quidem harum quisquam voluptate voluptates, quaerat assumenda? Mollitia reiciendis, atque, non harum laudantium qui nihil natus unde quis quasi facilis doloribus eveniet praesentium ratione voluptate eos eum dolorum nisi libero eaque saepe ad commodi? Dicta, reprehenderit voluptates culpa aut unde impedit ipsa maxime, suscipit distinctio ex temporibus quam consequuntur quidem ullam perferendis repellendus cumque earum dignissimos. Ex voluptas alias quam quia illo, pariatur amet quos dolorum rerum.</p>
-                    </div>
+        {/* Dynamic Sections */}
+        {aboutData?.sections?.map((section, index) => (
+          <section key={index} className="pb-20 relative z-10">
+            <h2 className="md:hidden text-center text-3xl sm:text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent py-1">
+              {section.title}
+            </h2>
+            <div className={`container mx-auto flex flex-col items-center gap-12 ${section.imagePosition === 'right' ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
 
-                    <div>
-                       <h1 className='md:hidden text-4xl sm:text-5xl font-extrabold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent text-center mb-4'>About Me</h1>
-                        <img src="/profile.jpg" alt=""
-                            className='h-80 w-full object-cover md:h-[28rem] rounded-2xl'
-                        />
-                    </div>
-                </div>
+              {/* Image Column */}
+              <div className="w-full md:w-1/2 flex justify-center">
+                {section.image && (
+                  <Image
+                    src={section.image}
+                    alt={section.title || "Section Image"}
+                    width={500}
+                    height={400}
+                    objectFit="cover"
+                    className="rounded-2xl shadow-lg"
+                  />
+                )}
+              </div>
 
+              {/* Text Column */}
+              <div className="w-full md:w-1/2">
+                <h2 className="hidden md:block text-3xl sm:text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent py-1">
+                  {section.title}
+                </h2>
+                <p className="text-lg text-gray-300 md:text-justify">
+                  {section.description}
+                </p>
+              </div>
 
-
-
-            </section>
-        </>
-    )
+            </div>
+          </section>
+        ))}
+      </main>
+      <Footer />
+    </>
+  );
 }

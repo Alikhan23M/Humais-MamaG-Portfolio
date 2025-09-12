@@ -2,11 +2,13 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-
+  const path = usePathname();
+  const isHomePage = path==='/'
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
@@ -16,12 +18,12 @@ export default function Navbar() {
   }, [])
 
   const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Services', href: '#services' },
-    { name: 'Portfolio', href: '#portfolio' },
-    { name: 'Testimonials', href: '#testimonials' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Home', href: isHomePage?'#home':'/#home' },
+    { name: 'About', href: isHomePage?'#about':'/#about' },
+    { name: 'Services', href: isHomePage?'#services':'/#services' },
+    { name: 'Portfolio', href: isHomePage?'#portfolio':'/#portfolio' },
+    { name: 'Testimonials', href: isHomePage?'#testimonials':'/#testimonials' },
+    { name: 'Contact', href: isHomePage?'#contact':'/#contact' },
   ]
 
   return (
