@@ -90,6 +90,9 @@ export default function TestimonialsPage() {
     } catch (err) {
       console.error(err)
       toast.error("Failed to delete testimonial")
+    }finally{
+      setShowConfirm(false);
+      setDeleteId(null);
     }
   }
 

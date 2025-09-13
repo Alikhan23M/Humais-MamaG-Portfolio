@@ -118,9 +118,14 @@ export default function ServicesPage() {
       }
       toast.success("Service deleted");
       setServices((prev) => prev.filter((s) => s._id !== deleteId));
+      
     } catch (err) {
       console.error(err);
       toast.error("Failed to delete service");
+    }
+    finally{
+      setShowConfirm(false);
+      setDeleteId(null);
     }
   }
 

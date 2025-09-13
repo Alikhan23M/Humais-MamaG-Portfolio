@@ -109,6 +109,10 @@ export default function StatsPage() {
       console.error(err)
       toast.error('Failed to delete stat')
     }
+    finally{
+      setShowConfirm(false);
+      setDeleteId(null);
+    }
   }
 
   const handleEdit = (stat) => {

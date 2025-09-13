@@ -75,6 +75,7 @@ export default function MessagesPage() {
       if (response.ok) {
         toast.success('Message Deleted Successfully')
         setMessages((prev) => prev.filter((msg) => msg._id !== deleteId));
+       
       }
       else {
         toast.error('Error Delteing Messages')
@@ -84,6 +85,8 @@ export default function MessagesPage() {
       toast.error('Error Deleting Message')
     } finally {
       setSaving(false);
+       setShowConfirm(false);
+      setDeleteId(null);
     }
   }
 

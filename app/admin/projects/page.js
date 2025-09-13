@@ -95,6 +95,10 @@ export default function ProjectsPage() {
       console.error(err)
       toast.error("Failed to delete project")
     }
+    finally{
+       setShowConfirm(false);
+      setDeleteId(null);
+    }
   }
 
   if (isLoading) {
