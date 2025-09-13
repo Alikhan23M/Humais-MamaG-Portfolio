@@ -1,6 +1,6 @@
 {
   "name": "content-writer-portfolio",
-  "author":"Ali Khan",  
+  "author": "Ali Khan",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.8",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.7.0",

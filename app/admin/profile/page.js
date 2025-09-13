@@ -6,7 +6,7 @@ import Cookies from "js-cookie"
 import AdminLayout from "../../../components/admin/AdminLayout"
 import CloudinaryUpload from "../../../components/admin/CloudinaryUpload"
 import ClientLoader from "@/components/ui/ClientLoader"
-
+import toast from "react-hot-toast"
 
 export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true)
@@ -46,10 +46,10 @@ export default function ProfilePage() {
       })
 
       if (!res.ok) throw new Error("Failed to save profile")
-      alert("✅ Profile updated successfully!")
+      toast.success("Profile updated successfully!")
     } catch (err) {
       console.error(err)
-      alert("❌ Failed to update profile")
+      toast.error("Failed to update profile")
     } finally {
       setSaving(false)
     }

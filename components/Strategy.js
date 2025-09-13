@@ -5,7 +5,10 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Lightbulb, Wrench, Rocket } from 'lucide-react';
-
+import * as FiIcons from 'react-icons/fi'
+import * as AiIcons from 'react-icons/ai'
+import * as BsIcons from 'react-icons/bs'
+const iconMap = { ...FiIcons, ...AiIcons, ...BsIcons }
 const sampleStrategies = [
     {
         title: 'Discovery & Analysis',
@@ -26,6 +29,18 @@ const sampleStrategies = [
 
 export default function Strategy() {
     const [strategies, setStrategies] = useState(sampleStrategies);
+    const fetchstrategy = async () => {
+        const response = await fetch('/api/strategy');
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data)
+            setStrategies(data);
+        }
+        else {
+            setStrategies(sampleStrategies);
+        }
+    }
+
     const { ref, inView } = useInView({
         triggerOnce: true,
         threshold: 0.2,
@@ -47,6 +62,10 @@ export default function Strategy() {
         show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
     };
 
+
+    useEffect(()=>{
+        fetchstrategy();
+    },[])
     return (
         <section id="strategy" className="py-24 bg-gray-950 text-gray-300 relative overflow-hidden">
             {/* Background Glows */}
@@ -77,8 +96,8 @@ export default function Strategy() {
                     {/* Vertical line */}
                     <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gray-700 -translate-x-1/2"></div>
 
-                    {strategies.map((strategy, index) => {
-                        const IconComponent = strategy.icon;
+                    {strategies?.map((strategy, index) => {
+                        const IconComponent = iconMap[strategy?.icon] || FiIcons.FiBarChart
                         const isLeft = index % 2 === 1;
 
                         return (
@@ -92,12 +111,12 @@ export default function Strategy() {
                                 <div className={`flex-1 p-4 border border-dotted rounded-md`}>
                                     {/* Icon and Dot */}
 
-                                    <div className='flex gap-2 items-center pb-2'> 
+                                    <div className='flex gap-2 items-center pb-2'>
                                         <IconComponent size={36} className='md:hidden p-1  rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-xl' />
 
-                                        <h3 className="text-xl font-bold text-white mb-2">{strategy.title}</h3>
+                                        <h3 className="text-xl font-bold text-white mb-2">{strategy?.title}</h3>
                                     </div>
-                                    <p className="text-gray-400">{strategy.description}</p>
+                                    <p className="text-gray-400">{strategy?.description}</p>
                                 </div>
 
                                 {/* Icon and Dot */}

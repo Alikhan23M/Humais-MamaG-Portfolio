@@ -6,6 +6,8 @@ import Cookies from "js-cookie"
 import AdminLayout from "../../../components/admin/AdminLayout"
 import CloudinaryUpload from "../../../components/admin/CloudinaryUpload"
 import ClientLoader from "@/components/ui/ClientLoader"
+import toast from "react-hot-toast"
+import ConfirmDialog from "@/components/ui/ConfirmDialog"
 
 export default function ProjectsPage() {
   const [isLoading, setIsLoading] = useState(true)
@@ -13,6 +15,9 @@ export default function ProjectsPage() {
   const [projects, setProjects] = useState([])
   const [editingProject, setEditingProject] = useState(null)
   const router = useRouter()
+
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   useEffect(() => {
     const token = Cookies.get("adminToken")
@@ -51,9 +56,11 @@ export default function ProjectsPage() {
         body: JSON.stringify(editingProject),
       })
 
-      if (!res.ok) throw new Error("Failed to save project")
+      if (!res.ok){
+        toast.error('Failed to Save Project')
+      }
 
-      alert("✅ Project saved successfully!")
+      toast.success("Project saved successfully!")
       setEditingProject(null)
 
       // Refresh projects
@@ -61,37 +68,52 @@ export default function ProjectsPage() {
       setProjects(refreshed)
     } catch (err) {
       console.error(err)
-      alert("❌ Failed to save project")
+      toast.error("Failed to save project")
     } finally {
       setSaving(false)
     }
   }
 
   const handleDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this project?")) return
+    setDeleteId(id);
+    setShowConfirm(true)
+  }
 
+  const confirmDelete = async ()=>{
     try {
-      const res = await fetch(`/api/projects/${id}`, {
+      const res = await fetch(`/api/projects/${deleteId}`, {
         method: "DELETE",
       })
-      if (!res.ok) throw new Error("Failed to delete project")
-      setProjects(projects.filter((p) => p._id !== id))
+      if(res.ok){
+        toast.success('Project Deleted Successfully');
+        setProjects(projects.filter((p) => p._id !== deleteId))
+      }
+      else{
+        toast.error('Failed to delte project');
+      }
     } catch (err) {
       console.error(err)
-      alert("❌ Failed to delete project")
+      toast.error("Failed to delete project")
     }
   }
 
   if (isLoading) {
     return (
       <AdminLayout>
-          <ClientLoader/>
-          </AdminLayout>
+        <ClientLoader />
+      </AdminLayout>
     )
   }
 
   return (
     <AdminLayout>
+      <ConfirmDialog
+        show={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Delete Project"
+        message="Are you sure you want to delete this Prject? This action cannot be undone."
+      />
       <div className="space-y-8">
         <div className="flex items-center justify-between ">
           <h1 className="text-3xl font-bold text-gray-900">Manage Projects</h1>
@@ -115,7 +137,7 @@ export default function ProjectsPage() {
           </button>
         </div>
 
-{/* Form (Add/Edit) */}
+        {/* Form (Add/Edit) */}
         {editingProject && (
           <form
             onSubmit={handleSave}
@@ -299,7 +321,7 @@ export default function ProjectsPage() {
             </div>
           </form>
         )}
-        
+
         {/* List */}
         <div className="grid gap-6 md:grid-cols-2">
           {projects.map((p) => (
@@ -334,7 +356,7 @@ export default function ProjectsPage() {
           ))}
         </div>
 
-        
+
       </div>
     </AdminLayout>
   )

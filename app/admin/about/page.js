@@ -6,6 +6,7 @@ import Cookies from "js-cookie"
 import AdminLayout from "../../../components/admin/AdminLayout"
 import CloudinaryUpload from "../../../components/admin/CloudinaryUpload"
 import ClientLoader from "@/components/ui/ClientLoader"
+import toast from 'react-hot-toast';
 
 export default function AboutPage() {
   const [isLoading, setIsLoading] = useState(true)
@@ -27,6 +28,7 @@ export default function AboutPage() {
         if (data) setAbout(data) // single about doc
       } catch (err) {
         console.error("Failed to fetch about:", err)
+        toast.error('Failed to fetch about please try again')
       } finally {
         setIsLoading(false)
       }
@@ -45,10 +47,10 @@ export default function AboutPage() {
       })
 
       if (!res.ok) throw new Error("Failed to save about")
-      alert("✅ About updated successfully!")
+      toast.success("About updated successfully!")
     } catch (err) {
       console.error(err)
-      alert("❌ Failed to update about")
+      toast.error("Failed to update about")
     } finally {
       setSaving(false)
     }
@@ -56,9 +58,9 @@ export default function AboutPage() {
 
   if (isLoading) {
     return (
-     <AdminLayout>
-         <ClientLoader/>
-         </AdminLayout>
+      <AdminLayout>
+        <ClientLoader />
+      </AdminLayout>
     )
   }
 

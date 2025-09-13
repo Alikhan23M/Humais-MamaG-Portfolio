@@ -6,6 +6,8 @@ import Cookies from "js-cookie"
 import AdminLayout from "../../../components/admin/AdminLayout"
 import CloudinaryUpload from "../../../components/admin/CloudinaryUpload"
 import ClientLoader from "@/components/ui/ClientLoader"
+import toast from "react-hot-toast"
+import ConfirmDialog from "@/components/ui/ConfirmDialog"
 
 export default function TestimonialsPage() {
   const [isLoading, setIsLoading] = useState(true)
@@ -13,6 +15,9 @@ export default function TestimonialsPage() {
   const [testimonials, setTestimonials] = useState([])
   const [editingTestimonial, setEditingTestimonial] = useState(null)
   const router = useRouter()
+
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   useEffect(() => {
     const token = Cookies.get("adminToken")
@@ -53,7 +58,7 @@ export default function TestimonialsPage() {
 
       if (!res.ok) throw new Error("Failed to save testimonial")
 
-      alert("✅ Testimonial saved successfully!")
+      toast.success("Testimonial saved successfully!")
       setEditingTestimonial(null)
 
       // Refresh testimonials
@@ -61,37 +66,50 @@ export default function TestimonialsPage() {
       setTestimonials(refreshed)
     } catch (err) {
       console.error(err)
-      alert("❌ Failed to save testimonial")
+      toast.error("Failed to save testimonial")
     } finally {
       setSaving(false)
     }
   }
 
   const handleDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this testimonial?")) return
+    setDeleteId(id);
+    setShowConfirm(true);
 
-    try {
-      const res = await fetch(`/api/testimonials/${id}`, {
+  }
+
+  const confirmDelete = async()=>{
+      try {
+      const res = await fetch(`/api/testimonials/${deleteId}`, {
         method: "DELETE",
       })
-      if (!res.ok) throw new Error("Failed to delete testimonial")
-      setTestimonials(testimonials.filter((t) => t._id !== id))
+      if (!res.ok){
+        toast.error('Failed to delete the testimonial')
+      }
+      setTestimonials(testimonials.filter((t) => t._id !== deleteId))
     } catch (err) {
       console.error(err)
-      alert("❌ Failed to delete testimonial")
+      toast.error("Failed to delete testimonial")
     }
   }
 
   if (isLoading) {
     return (
       <AdminLayout>
-          <ClientLoader/>
-          </AdminLayout>
+        <ClientLoader />
+      </AdminLayout>
     )
   }
 
   return (
     <AdminLayout>
+      <ConfirmDialog
+        show={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Delete Testimonial"
+        message="Are you sure you want to delete this Testimonial? This action cannot be undone."
+      />
       <div className="space-y-8">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-gray-900">Manage Testimonials</h1>

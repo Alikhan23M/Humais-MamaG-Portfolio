@@ -1,0 +1,298 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import Cookies from 'js-cookie'
+import AdminLayout from '../../../components/admin/AdminLayout'
+import * as FiIcons from 'react-icons/fi'
+import * as AiIcons from 'react-icons/ai'
+import * as BsIcons from 'react-icons/bs'
+import ClientLoader from '@/components/ui/ClientLoader'
+import toast from 'react-hot-toast';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
+
+// Merge all icons
+const iconMap = { ...FiIcons, ...AiIcons, ...BsIcons }
+
+export default function StrategyPage() {
+  const [isLoading, setIsLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [strategy, setstrategy] = useState([])
+  const [editingStrategy, setEditingStrategy] = useState(null)
+  const [form, setForm] = useState({ icon: '', title: '', description: '' })
+  const [showIconPicker, setShowIconPicker] = useState(false)
+  const [iconSearch, setIconSearch] = useState('')
+
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+
+
+  const router = useRouter()
+
+  useEffect(() => {
+    const token = Cookies.get('adminToken')
+    if (!token) {
+      router.push('/admin')
+      return
+    }
+    fetchstrategy()
+  }, [router])
+
+  const fetchstrategy = async () => {
+    try {
+      const res = await fetch('/api/strategy')
+      const data = await res.json()
+      setstrategy(data)
+    } catch (err) {
+      console.error('Failed to fetch strategy:', err)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setForm({ ...form, [name]: value })
+  }
+
+  const handleIconSelect = (iconName) => {
+    setForm({ ...form, icon: iconName })
+    setShowIconPicker(false)
+    setIconSearch('')
+  }
+
+  const resetForm = () => {
+    setForm({ icon: '', title: '', description: '' })
+    setEditingStrategy(null)
+    setShowIconPicker(false)
+    setIconSearch('')
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setSaving(true)
+    try {
+      const method = editingStrategy ? 'PUT' : 'POST'
+      const url = editingStrategy ? `/api/strategy/${editingStrategy._id}` : '/api/strategy'
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      })
+
+      if (!res.ok) throw new Error('Failed to save strategy')
+      toast.success(editingStrategy ? 'Strategy updated' : 'Strategy created')
+      resetForm()
+      fetchstrategy()
+    } catch (err) {
+      console.error(err)
+      toast.error('Failed to save Strategy')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleDelete = async (id) => {
+    setDeleteId(id);
+    setShowConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      const res = await fetch(`/api/strategy/${deleteId}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Failed')
+      toast.success('Strategy deleted')
+      setstrategy(strategy.filter((s) => s._id !== deleteId))
+    } catch (err) {
+      console.error(err)
+      toast.error('Failed to delete strategy')
+    }
+    finally {
+      setShowConfirm(false);
+      setDeleteId(null);
+    }
+  }
+
+  const handleEdit = (strategy) => {
+    setEditingStrategy(strategy)
+    setForm({ icon: strategy.icon, title: strategy.title, description: strategy.description })
+  }
+
+  if (isLoading) {
+    return (
+      <AdminLayout>
+        <ClientLoader />
+      </AdminLayout>
+    )
+  }
+
+  // Filter icons based on search
+  const filteredIcons = Object.keys(iconMap).filter((name) =>
+    name.toLowerCase().includes(iconSearch.toLowerCase())
+  )
+
+  return (
+    <AdminLayout>
+      <ConfirmDialog
+        show={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Delete Strategy"
+        message="Are you sure you want to delete this strategy? This action cannot be undone."
+      />
+      <div className="space-y-8">
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Manage strategy</h1>
+          <p className="text-gray-600 mt-2">
+            Add, edit or delete strategy displayed on your About section.
+          </p>
+        </div>
+
+        {/* Form */}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white shadow rounded-xl p-6 space-y-6 border border-gray-200"
+        >
+          <h2 className="text-xl font-semibold text-gray-800">
+            {editingStrategy ? 'Edit Strategy' : 'Add New Strategy'}
+          </h2>
+
+          {/* Icon Picker */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Icon</label>
+            <div
+              className="mt-1 w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary-500 focus:border-primary-500 flex items-center justify-between px-3 py-2 cursor-pointer"
+              onClick={() => setShowIconPicker(!showIconPicker)}
+            >
+              <span className="flex items-center gap-2">
+                {form.icon && iconMap[form.icon] ? (
+                  (() => {
+                    const SelectedIcon = iconMap[form.icon]
+                    return <SelectedIcon size={20} />
+                  })()
+                ) : (
+                  <span className="text-gray-400">Select an icon</span>
+                )}
+                {form.icon || ''}
+              </span>
+              <span className="text-gray-500">▼</span>
+            </div>
+
+            {showIconPicker && (
+              <div className="mt-2 max-h-64 overflow-y-auto grid grid-cols-6 gap-3 border p-3 rounded-lg bg-gray-50 shadow-inner">
+                <input
+                  type="text"
+                  placeholder="Search icons..."
+                  value={iconSearch}
+                  onChange={(e) => setIconSearch(e.target.value)}
+                  className="col-span-6 mb-2 p-2 border rounded focus:outline-none focus:ring focus:border-primary-500"
+                />
+                {filteredIcons.length > 0 ? (
+                  filteredIcons.map((iconName) => {
+                    const IconComponent = iconMap[iconName]
+                    return (
+                      <div
+                        key={iconName}
+                        onClick={() => handleIconSelect(iconName)}
+                        className="p-2 rounded cursor-pointer hover:bg-purple-100 flex items-center justify-center"
+                      >
+                        <IconComponent size={20} />
+                      </div>
+                    )
+                  })
+                ) : (
+                  <p className="col-span-6 text-center text-gray-400">No icons found</p>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Value Input */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Title</label>
+            <input
+              type="text"
+              name="title"
+              value={form.title}
+              onChange={handleChange}
+              placeholder="Strategy1"
+              required
+              className="mt-1 w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary-500 focus:border-primary-500"
+            />
+          </div>
+
+          {/* Text Input */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <input
+              type="text"
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              placeholder="description of strategy"
+              required
+              className="mt-1 w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary-500 focus:border-primary-500"
+            />
+          </div>
+
+          {/* Buttons */}
+          <div className="flex gap-3">
+            <button
+              type="submit"
+              disabled={saving}
+              className="bg-primary-600 text-white px-4 py-2 rounded-lg shadow hover:bg-primary-700 disabled:opacity-50"
+            >
+              {saving ? 'Saving...' : editingStrategy ? 'Update Strategy' : 'Create Strategy'}
+            </button>
+            {editingStrategy && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="bg-gray-200 px-4 py-2 rounded-lg shadow hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+        </form>
+
+        {/* strategy List */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {strategy.map((strategy) => {
+            const IconComponent = iconMap[strategy?.icon] || FiIcons.FiBarChart
+            return (
+              <div
+                key={strategy?._id}
+                className="bg-white shadow rounded-lg p-4 border border-gray-200 flex flex-col  gap-4"
+              >
+                <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg">
+                  <IconComponent size={24} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">{strategy?.title}</h3>
+                  <p className="text-gray-600 text-sm">{strategy?.description}</p>
+                </div>
+                <div className="ml-auto flex gap-2">
+                  <button
+                    onClick={() => handleEdit(strategy)}
+                    className="px-3 py-1 text-sm bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(strategy?._id)}
+                    className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </AdminLayout>
+  )
+}

@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import AdminLayout from "../../../components/admin/AdminLayout";
 import ClientLoader from "@/components/ui/ClientLoader";
+import toast from "react-hot-toast";
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 export default function MessagesPage() {
   const [messages, setMessages] = useState([]);
@@ -12,6 +14,11 @@ export default function MessagesPage() {
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState({ search: "", status: "all" });
   const router = useRouter();
+
+
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+
 
   useEffect(() => {
     const token = Cookies.get("adminToken");
@@ -22,8 +29,11 @@ export default function MessagesPage() {
         const res = await fetch("/api/messages");
         const data = await res.json();
         setMessages(data);
+        toast.success('All messages fetched successfully')
+
       } catch (err) {
         console.error("Failed to fetch messages:", err);
+        toast.error('Failed to fetch messages please try again')
       } finally {
         setIsLoading(false);
       }
@@ -46,6 +56,7 @@ export default function MessagesPage() {
         )
       );
     } catch (err) {
+      toast.error('Failed to update please try again')
       console.error("Error updating message:", err);
     } finally {
       setSaving(false);
@@ -53,17 +64,28 @@ export default function MessagesPage() {
   };
 
   const deleteMessage = async (id) => {
-    if (!confirm("Are you sure you want to delete this message?")) return;
+    setDeleteId(id);
+    setShowConfirm(true);
     setSaving(true);
+  };
+
+  const confirmDelete = async () => {
     try {
-      await fetch(`/api/messages/${id}`, { method: "DELETE" });
-      setMessages((prev) => prev.filter((msg) => msg._id !== id));
+      const response = await fetch(`/api/messages/${deleteId}`, { method: "DELETE" });
+      if (response.ok) {
+        toast.success('Message Deleted Successfully')
+        setMessages((prev) => prev.filter((msg) => msg._id !== deleteId));
+      }
+      else {
+        toast.error('Error Delteing Messages')
+      }
     } catch (err) {
       console.error("Error deleting message:", err);
+      toast.error('Error Deleting Message')
     } finally {
       setSaving(false);
     }
-  };
+  }
 
   const filteredMessages = useMemo(() => {
     return messages.filter((msg) => {
@@ -82,13 +104,20 @@ export default function MessagesPage() {
   if (isLoading) {
     return (
       <AdminLayout>
-          <ClientLoader/>
-          </AdminLayout>
+        <ClientLoader />
+      </AdminLayout>
     );
   }
 
   return (
     <AdminLayout>
+      <ConfirmDialog
+        show={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Delete Message"
+        message="Are you sure you want to delete this Message? This action cannot be undone."
+      />
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Manage Messages</h1>
@@ -141,9 +170,8 @@ export default function MessagesPage() {
               {filteredMessages.map((msg) => (
                 <tr
                   key={msg._id}
-                  className={`border-b transition-colors ${
-                    msg.isRead ? "bg-gray-50" : "bg-yellow-50 hover:bg-yellow-100"
-                  }`}
+                  className={`border-b transition-colors ${msg.isRead ? "bg-gray-50" : "bg-yellow-50 hover:bg-yellow-100"
+                    }`}
                 >
                   <td className="p-3 border">{msg.name}</td>
                   <td className="p-3 border">{msg.email}</td>

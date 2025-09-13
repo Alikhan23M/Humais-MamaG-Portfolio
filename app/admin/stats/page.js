@@ -8,6 +8,8 @@ import * as FiIcons from 'react-icons/fi'
 import * as AiIcons from 'react-icons/ai'
 import * as BsIcons from 'react-icons/bs'
 import ClientLoader from '@/components/ui/ClientLoader'
+import toast from 'react-hot-toast'
+import ConfirmDialog from '@/components/ui/ConfirmDialog'
 
 // Merge all icons
 const iconMap = { ...FiIcons, ...AiIcons, ...BsIcons }
@@ -20,6 +22,8 @@ export default function StatsPage() {
   const [form, setForm] = useState({ icon: '', value: '', text: '' })
   const [showIconPicker, setShowIconPicker] = useState(false)
   const [iconSearch, setIconSearch] = useState('')
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   const router = useRouter()
 
@@ -88,15 +92,22 @@ export default function StatsPage() {
   }
 
   const handleDelete = async (id) => {
-    if (!confirm('Delete this stat?')) return
+    setDeleteId(id);
+    setShowConfirm(true);
+
+  }
+
+  const confirmDelete = async () => {
     try {
       const res = await fetch(`/api/stats/${id}`, { method: 'DELETE' })
-      if (!res.ok) throw new Error('Failed')
-      alert('✅ Stat deleted')
-      setStats(stats.filter((s) => s._id !== id))
+      if (!res.ok){
+        toast.error('Failed to delete the Stat')
+      }
+      toast.success('Stat deleted')
+      setStats(stats.filter((s) => s._id !== deleteId))
     } catch (err) {
       console.error(err)
-      alert('❌ Failed to delete stat')
+      toast.error('Failed to delete stat')
     }
   }
 
@@ -108,8 +119,8 @@ export default function StatsPage() {
   if (isLoading) {
     return (
       <AdminLayout>
-          <ClientLoader/>
-          </AdminLayout>
+        <ClientLoader />
+      </AdminLayout>
     )
   }
 
@@ -120,6 +131,13 @@ export default function StatsPage() {
 
   return (
     <AdminLayout>
+      <ConfirmDialog
+        show={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Delete Stat"
+        message="Are you sure you want to delete this Stat? This action cannot be undone."
+      />
       <div className="space-y-8">
         {/* Header */}
         <div>

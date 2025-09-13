@@ -2,6 +2,10 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
+import { Toaster } from 'react-hot-toast';
+import * as FiIcons from 'react-icons/fi'
+import * as AiIcons from 'react-icons/ai'
+import * as BsIcons from 'react-icons/bs'
 import { 
   LayoutDashboard, 
   User, 
@@ -17,7 +21,11 @@ import {
   User2,
   InfoIcon
 } from 'lucide-react'
+import { BsBarChartSteps } from 'react-icons/bs';
+
 import Link from 'next/link'
+
+
 
 export default function AdminLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -29,6 +37,7 @@ export default function AdminLayout({ children }) {
     {name:'About', href:'/admin/about', icon:InfoIcon},
     {name: 'About Page', href:'/admin/detail-about', icon: User2},
     {name:'Stats', href:'/admin/stats', icon: BarChart2},
+    {name:'Strategy', href:'/admin/strategy', icon: BsBarChartSteps},
     { name: 'Services', href: '/admin/services', icon: Briefcase },
     { name: 'Projects', href: '/admin/projects', icon: FolderOpen },
     { name: 'Testimonials', href: '/admin/testimonials', icon: Star },
@@ -145,6 +154,7 @@ export default function AdminLayout({ children }) {
           </div>
         </main>
       </div>
+      <Toaster position="top-center" />
     </div>
   )
 }

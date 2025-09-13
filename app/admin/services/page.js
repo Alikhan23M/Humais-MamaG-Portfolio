@@ -8,6 +8,9 @@ import * as FiIcons from "react-icons/fi"; // Feather icons
 import * as AiIcons from "react-icons/ai"; // Ant icons
 import * as BsIcons from "react-icons/bs"; // Bootstrap icons
 import ClientLoader from "@/components/ui/ClientLoader";
+import toast from "react-hot-toast";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
+
 
 export default function ServicesPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -26,6 +29,10 @@ export default function ServicesPage() {
   const router = useRouter();
 
   const ALL_ICONS = { ...FiIcons, ...AiIcons, ...BsIcons };
+
+
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   useEffect(() => {
     const token = Cookies.get("adminToken");
@@ -84,32 +91,38 @@ export default function ServicesPage() {
 
       if (!res.ok) throw new Error("Failed to save service");
 
-      alert(
-        editingService ? "✅ Service updated successfully" : "✅ Service created"
+      toast.success(
+        editingService ? "Service updated successfully" : "Service created"
       );
       resetForm();
       const updated = await fetch("/api/services").then((r) => r.json());
       setServices(updated);
     } catch (err) {
       console.error(err);
-      alert("❌ Failed to save service");
+      toast.error("Failed to save service");
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("Delete this service?")) return;
+    setDeleteId(id);
+    setShowConfirm(true);
+  };
+
+  const confirmDelete = async()=>{
     try {
-      const res = await fetch(`/api/services/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed");
-      alert("✅ Service deleted");
-      setServices((prev) => prev.filter((s) => s._id !== id));
+      const res = await fetch(`/api/services/${deleteId}`, { method: "DELETE" });
+      if (!res.ok) {
+        toast.error('Failed to delte the service')
+      }
+      toast.success("Service deleted");
+      setServices((prev) => prev.filter((s) => s._id !== deleteId));
     } catch (err) {
       console.error(err);
-      alert("❌ Failed to delete service");
+      toast.error("Failed to delete service");
     }
-  };
+  }
 
   const handleEdit = (service) => {
     setEditingService(service);
@@ -129,13 +142,20 @@ export default function ServicesPage() {
   if (isLoading) {
     return (
       <AdminLayout>
-          <ClientLoader/>
-          </AdminLayout>
+        <ClientLoader />
+      </AdminLayout>
     );
   }
 
   return (
     <AdminLayout>
+      <ConfirmDialog
+        show={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Delete Service"
+        message="Are you sure you want to delete this Service? This action cannot be undone."
+      />
       <div className="space-y-8">
         {/* Page Header */}
         <div>
@@ -202,11 +222,10 @@ export default function ServicesPage() {
                     key={iconName}
                     type="button"
                     onClick={() => setForm({ ...form, icon: iconName })}
-                    className={`p-2 rounded border flex justify-center items-center transition ${
-                      form.icon === iconName
+                    className={`p-2 rounded border flex justify-center items-center transition ${form.icon === iconName
                         ? "bg-primary-600 text-white border-primary-600"
                         : "hover:bg-gray-100"
-                    }`}
+                      }`}
                   >
                     <IconComponent size={20} />
                   </button>
@@ -253,8 +272,8 @@ export default function ServicesPage() {
               {saving
                 ? "Saving..."
                 : editingService
-                ? "Update Service"
-                : "Create Service"}
+                  ? "Update Service"
+                  : "Create Service"}
             </button>
             {editingService && (
               <button

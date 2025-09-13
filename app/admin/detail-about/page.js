@@ -6,23 +6,27 @@ import Cookies from "js-cookie"
 import AdminLayout from "../../../components/admin/AdminLayout"
 import CloudinaryUpload from "../../../components/admin/CloudinaryUpload"
 import ClientLoader from "@/components/ui/ClientLoader"
+import toast from "react-hot-toast"
+
 
 export default function AboutPage() {
   const defaultAbout = {
-    title:'Heading',
-    description:'Main Page Description Here',
-    imagePosition:'left',
-    sections:[{
-      title:'Section1',
-      description:'Description for section',
-      image:'defaultimage.com'
+    title: 'Heading',
+    description: 'Main Page Description Here',
+    imagePosition: 'left',
+    sections: [{
+      title: 'Section1',
+      description: 'Description for section',
+      image: 'defaultimage.com'
     }
-  ]
+    ]
   }
   const [isLoading, setIsLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [about, setAbout] = useState(null)
   const router = useRouter()
+
+
 
   useEffect(() => {
     const token = Cookies.get("adminToken")
@@ -40,10 +44,10 @@ export default function AboutPage() {
           return
         }
         const data = await res.json()
-        if(data.length>0){
+        if (data.length > 0) {
           setAbout(data[0])
         }
-        else{
+        else {
           setAbout(defaultAbout);
         }
       } catch (err) {
@@ -90,10 +94,10 @@ export default function AboutPage() {
       })
 
       if (!res.ok) throw new Error("Failed to save about")
-      alert("✅ About updated successfully!")
+      toast.success("About updated successfully!")
     } catch (err) {
       console.error(err)
-      alert("❌ Failed to update about")
+      toast.error("Failed to update about")
     } finally {
       setSaving(false)
     }
@@ -107,11 +111,12 @@ export default function AboutPage() {
     )
   }
 
-  
-  
+
+
 
   return (
     <AdminLayout>
+     
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Manage About Page</h1>
@@ -132,7 +137,7 @@ export default function AboutPage() {
             <input
               type="text"
               value={about?.title}
-              onChange={(e) => setAbout({ ...about,title: e.target.value })}
+              onChange={(e) => setAbout({ ...about, title: e.target.value })}
               className="mt-1 w-full border-gray-300 rounded-lg shadow-sm focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
