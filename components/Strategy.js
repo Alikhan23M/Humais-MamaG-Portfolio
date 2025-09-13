@@ -77,7 +77,7 @@ export default function Strategy() {
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Heading */}
                 <div className="text-center mb-16">
-                    <h2 className="text-4xl sm:text-5xl font-extrabold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+                    <h2 className="py-2 text-4xl sm:text-5xl font-extrabold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
                         Our Strategy
                     </h2>
                     <p className="text-lg text-gray-400 max-w-3xl mx-auto">

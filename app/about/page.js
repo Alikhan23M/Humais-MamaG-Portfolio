@@ -66,7 +66,7 @@ export default function AboutPage() {
            {aboutData?.title !== '' && <h1 className="text-4xl sm:text-5xl font-extrabold mb-8 text-center bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent py-2">
               {aboutData?.title}
             </h1>}
-            {aboutData?.description!== '' &&<p className="text-lg text-center max-w-4xl mx-auto">
+            {aboutData?.description!== '' &&<p className="text-lg text-center max-w-6xl mx-auto">
               {aboutData?.description}
             </p> }
           </div>
@@ -78,10 +78,10 @@ export default function AboutPage() {
             <h2 className="md:hidden text-center text-3xl sm:text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent py-1">
               {section.title}
             </h2>
-            <div className={`container mx-auto flex flex-col items-center gap-12 ${section.imagePosition === 'right' ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
+            <div className={`mx-auto flex flex-col items-center justify-between gap-12 ${section.imagePosition === 'right' ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
 
               {/* Image Column */}
-              <div className="w-full md:w-1/2 flex justify-center">
+              <div className={`w-full  flex justify-center ${section.imagePosition === 'left' ? 'md:justify-start' : 'md:justify-end'} `}>
                 {section.image && (
                   <Image
                     src={section.image}
@@ -95,7 +95,7 @@ export default function AboutPage() {
               </div>
 
               {/* Text Column */}
-              <div className="w-full md:w-1/2">
+              <div className="w-full ">
                 <h2 className="hidden md:block text-3xl sm:text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent py-1">
                   {section.title}
                 </h2>
